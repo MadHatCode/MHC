@@ -1,6 +1,6 @@
 <h1 align="center">
     <br>
-    <img src="img/MHC-NBG.png" alt="MDC" width="40%">
+    <img src="img/LOGO-v2-NBG.png" alt="MDC" width="40%">
 </h1>
 
 <p align="center">Um site com finalidade de apresentar o conteúdo feito para o Mad Hat Code.</p>
