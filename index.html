@@ -137,6 +137,7 @@
     h1{ font-size:2rem; }
   }
 </style>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -202,18 +203,18 @@
     <p style="margin-bottom:20px;">Alguns projetos já publicados, hospedados no GitHub Pages:</p>
     <div class="grid cols-3" id="portfolioGrid">
       <div class="card">
-        <h3>Projeto 1</h3>
-        <p>Breve descrição do site.</p>
+        <h3>Projeto Tarkan</h3>
+        <p>Um dos primeiros sites criados, a sua finalidade era apresentar o conteúdo feito para o servidor Tarkan.</p>
         <a class="go mono" href="#" target="_blank" rel="noopener">ver projeto →</a>
       </div>
       <div class="card">
-        <h3>Projeto 2</h3>
-        <p>Breve descrição do site.</p>
+        <h3>Projeto Khaliria</h3>
+        <p>Em Breve</p>
         <a class="go mono" href="#" target="_blank" rel="noopener">ver projeto →</a>
       </div>
       <div class="card">
-        <h3>Projeto 3</h3>
-        <p>Breve descrição do site.</p>
+        <h3>Projeto Fantasy</h3>
+        <p>Em Breve</p>
         <a class="go mono" href="#" target="_blank" rel="noopener">ver projeto →</a>
       </div>
     </div>
@@ -260,11 +261,11 @@
     <div class="contact-cols">
       <form id="contactForm">
         <div>
-          <label for="nome">Nome</label>
+          <label for="nome">Nome <span style="color:var(--neon);">*</span></label>
           <input id="nome" name="nome" type="text" required>
         </div>
         <div>
-          <label for="email">E-mail</label>
+          <label for="email">E-mail <span style="color:var(--neon);">*</span></label>
           <input id="email" name="email" type="email" required>
         </div>
         <div>
@@ -276,7 +277,7 @@
           </select>
         </div>
         <div>
-          <label for="mensagem">Mensagem</label>
+          <label for="mensagem">Mensagem <span style="color:var(--neon);">*</span></label>
           <textarea id="mensagem" name="mensagem" required placeholder="Descreva o que você tem em mente..."></textarea>
         </div>
         <div class="btn-row">
@@ -290,7 +291,7 @@
           <label>E-mail direto</label>
           <a href="mailto:madhatcode@outlook.com">madhatcode@outlook.com</a>
         </div>
-        <p style="font-size:0.85rem;">O formulário abre seu programa de e-mail com a mensagem pronta para enviar. Você também pode entrar em contato com nossa equipe pelo Discord.</p>
+        <p style="font-size:0.85rem;">O formulário irá direto para nosso e-mail com a sua mensagem. Você também pode entrar em contato com nossa equipe pelo Discord.</p>
       </div>
     </div>
   </section>
@@ -347,10 +348,16 @@
     <h2>5. Entregas e revisões</h2>
     <p>Cada projeto passa por uma fase de briefing, desenvolvimento e entrega, conforme descrito nas páginas de Website e Mod Conan. Ajustes dentro do escopo combinado inicialmente estão inclusos, mudanças que fujam do escopo original podem ser tratadas como um novo pedido ou acordo adicional.</p>
 
-    <h2>6. Dúvidas</h2>
+    <h2>6. Uso de sites como portfólio</h2>
+    <p>Todos os websites criados poderão ser usados como portfólio da Mad Hat Code, a não ser que o cliente contratante solicite que isso não seja feito.</p>
+
+    <h2>7. Publicação e armazenamento de mods</h2>
+    <p>Os mods desenvolvidos serão postados apenas no Workshop da Steam, para uso público ou privado, de acordo com o desejo do cliente. Os arquivos do projeto não serão divulgados nem repassados a terceiros, e ficarão armazenados em nosso banco de dados por um prazo limite de 6 meses. Após esse prazo, o cliente deverá renovar o contrato para manter os arquivos armazenados. Caso o cliente não entre em contato até o prazo final, os arquivos poderão ser perdidos.</p>
+
+    <h2>8. Dúvidas</h2>
     <p>Qualquer dúvida sobre estes termos, ou caso algo não tenha ficado claro, pode ser enviada para <a href="mailto:madhatcode@outlook.com" style="color:var(--neon);">madhatcode@outlook.com</a> ou pelo nosso Discord.</p>
 
-    <h2>7. Alterações nestes termos</h2>
+    <h2>9. Alterações nestes termos</h2>
     <p>Estes termos podem ser atualizados periodicamente. A data da última alteração está indicada no topo desta página.</p>
   </section>
 
@@ -395,19 +402,29 @@
   const start = (location.hash || '#home').replace('#','');
   goTo(['home','website','mod','contato','privacidade','termos'].includes(start) ? start : 'home');
 
+  emailjs.init({ publicKey: 'u-pmvqv_gTzmoxvyD' });
+
   document.getElementById('contactForm').addEventListener('submit', function(e){
     e.preventDefault();
     const f = e.target;
-    const subject = encodeURIComponent('Contato via site, ' + f.servico.value);
-    const body = encodeURIComponent(
-      'Nome: ' + f.nome.value + '\n' +
-      'E-mail: ' + f.email.value + '\n' +
-      'Serviço: ' + f.servico.value + '\n\n' +
-      f.mensagem.value
+    const msgEl = document.getElementById('formMsg');
+    const btn = f.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    msgEl.textContent = 'Enviando...';
+
+    emailjs.sendForm('MHC_0i020E', 'template_dkzuj8o', f).then(
+      function(){
+        msgEl.textContent = 'Mensagem enviada! Retornaremos em breve.';
+        f.reset();
+        btn.disabled = false;
+      },
+      function(err){
+        msgEl.textContent = 'Não foi possível enviar agora. Tente novamente ou fale pelo Discord.';
+        btn.disabled = false;
+      }
     );
-    window.location.href = 'mailto:madhatcode@outlook.com?subject=' + subject + '&body=' + body;
-    document.getElementById('formMsg').textContent = 'Abrindo seu e-mail para enviar o pedido...';
   });
 </script>
+
 </body>
 </html>
